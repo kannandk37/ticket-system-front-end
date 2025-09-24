@@ -33,7 +33,7 @@ const TicketDetail = () => {
       if (id) {
         try {
           let response = await axios.get(
-            `${process.env.BASE_URL}/api/tickets/${id}`
+            `${import.meta.env.VITE_API_URL}/api/tickets/${id}`
           );
           setTicket(response.data);
         } catch (error) {
@@ -83,7 +83,7 @@ const TicketDetail = () => {
 
   const createTicket = async (ticket: Ticket) => {
     try {
-      await axios.post(`${process.env.BASE_URL}/api/tickets`, ticket);
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/tickets`, ticket);
       navigate("/tickets");
     } catch (error) {
       console.log(error);
@@ -93,7 +93,7 @@ const TicketDetail = () => {
   const editTicket = async (ticket: Ticket) => {
     try {
       await axios.put(
-        `${process.env.BASE_URL}/api/tickets/${ticket.id}`,
+        `${import.meta.env.VITE_API_URL}/api/tickets/${ticket.id}`,
         ticket
       );
       navigate("/tickets");

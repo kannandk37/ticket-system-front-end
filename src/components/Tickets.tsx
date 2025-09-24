@@ -59,7 +59,7 @@ function Tickets({ pageSize = 10 }) {
 
   const getTickets = async () => {
     try {
-      let url = `${process.env.BASE_URL}/api/tickets`;
+      let url = `${import.meta.env.VITE_API_URL}/api/tickets`;
 
       const params = new URLSearchParams();
       if (search?.trim()) {
@@ -108,7 +108,7 @@ function Tickets({ pageSize = 10 }) {
   const deleteTicket = async (id: string) => {
     try {
       let ticketsData = await axios.delete(
-        `${process.env.BASE_URL}/api/tickets/${id}`
+        `${import.meta.env.VITE_API_URL}/api/tickets/${id}`
       );
       await getTickets();
     } catch (error) {
