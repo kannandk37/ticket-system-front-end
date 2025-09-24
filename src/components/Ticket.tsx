@@ -33,7 +33,7 @@ const TicketDetail = () => {
       if (id) {
         try {
           let response = await axios.get(
-            `http://localhost:3000/api/tickets/${id}`
+            `${process.env.BASE_URL}/api/tickets/${id}`
           );
           setTicket(response.data);
         } catch (error) {
@@ -83,7 +83,7 @@ const TicketDetail = () => {
 
   const createTicket = async (ticket: Ticket) => {
     try {
-      await axios.post("http://localhost:3000/api/tickets", ticket);
+      await axios.post(`${process.env.BASE_URL}/api/tickets`, ticket);
       navigate("/tickets");
     } catch (error) {
       console.log(error);
@@ -92,7 +92,10 @@ const TicketDetail = () => {
 
   const editTicket = async (ticket: Ticket) => {
     try {
-      await axios.put(`http://localhost:3000/api/tickets/${ticket.id}`, ticket);
+      await axios.put(
+        `${process.env.BASE_URL}/api/tickets/${ticket.id}`,
+        ticket
+      );
       navigate("/tickets");
     } catch (error) {
       console.log(error);

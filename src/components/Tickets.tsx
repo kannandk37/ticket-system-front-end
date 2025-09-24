@@ -59,7 +59,7 @@ function Tickets({ pageSize = 10 }) {
 
   const getTickets = async () => {
     try {
-      let url = "http://localhost:3000/api/tickets";
+      let url = `${process.env.BASE_URL}/api/tickets`;
 
       const params = new URLSearchParams();
       if (search?.trim()) {
@@ -108,7 +108,7 @@ function Tickets({ pageSize = 10 }) {
   const deleteTicket = async (id: string) => {
     try {
       let ticketsData = await axios.delete(
-        `http://localhost:3000/api/tickets/${id}`
+        `${process.env.BASE_URL}/api/tickets/${id}`
       );
       await getTickets();
     } catch (error) {
