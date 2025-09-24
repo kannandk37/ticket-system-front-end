@@ -15,6 +15,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { TicketPriority, TicketStatus, type Ticket } from "../entity";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { DateTime } from "luxon";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const statusOptions = [
   { value: "", label: "All Status" },
@@ -39,6 +41,9 @@ function Tickets({ pageSize = 10 }) {
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [selectedPriority, setSelectedPriority] = useState<string | null>(null);
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [from, setFrom] = useState<DateTime>(null);
+  const [to, setTo] = useState<DateTime>(null);
+  const [cursor, setCursor] = useState<string>(null);
 
   useEffect(() => {
     (async () => {
@@ -66,15 +71,38 @@ function Tickets({ pageSize = 10 }) {
       if (selectedPriority) {
         params.set("priority", selectedPriority);
       }
+      if (from) {
+        params.set("from", from.toString());
+      }
+      if (to) {
+        params.set("to", to.toString());
+      }
+      console.log(cursor, page);
+      if (cursor && page > 0) {
+        params.set("cursor", cursor.toString());
+      }
       params.set("page", String(page));
       params.set("limit", String(rowsPerPage));
 
       let ticketsData = await axios.get(`${url}?${params.toString()}`);
       setTickets(ticketsData?.data?.data as any);
+      if (ticketsData?.data?.data?.length > 0) {
+        setCursor(
+          ticketsData?.data?.data[ticketsData?.data?.data.length - 1].id
+        );
+      } else {
+        setCursor(null);
+      }
       setTotal(ticketsData?.data?.total);
+      nullifyRangeFilter();
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const nullifyRangeFilter = () => {
+    setFrom(null);
+    setTo(null);
   };
 
   const deleteTicket = async (id: string) => {
@@ -113,11 +141,11 @@ function Tickets({ pageSize = 10 }) {
           <TableCell key="S.No" sx={{ width: "80px" }}>
             <h3>S.No</h3>
           </TableCell>
-          <TableCell key="Content">
-            <h3>Content</h3>
+          <TableCell key="Query">
+            <h3>Query</h3>
           </TableCell>
-          <TableCell key="Reply">
-            <h3>Reply</h3>
+          <TableCell key="Answer">
+            <h3>Answer</h3>
           </TableCell>
           <TableCell key="Status">
             <h3>Status</h3>
@@ -125,7 +153,7 @@ function Tickets({ pageSize = 10 }) {
           <TableCell key="Priority">
             <h3>Priority</h3>
           </TableCell>
-          <TableCell key="Priority">
+          <TableCell key="CreadedOn">
             <h3>Created On</h3>
           </TableCell>
           <TableCell key="Action">
@@ -213,6 +241,22 @@ function Tickets({ pageSize = 10 }) {
               sx={{ width: 300 }}
             />
           </div>
+          <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+            <h3>From:</h3>
+            <DatePicker
+              value={from}
+              onChange={(newValue) => setFrom(newValue)}
+              maxDate={DateTime.now()}
+            />
+          </div>
+          <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+            <h3>To:</h3>
+            <DatePicker
+              value={to}
+              onChange={(newValue) => setTo(newValue)}
+              maxDate={DateTime.now()}
+            />
+          </div>
           <div>
             <Button
               variant="outlined"
@@ -264,7 +308,11 @@ function Tickets({ pageSize = 10 }) {
                               <h4>{el.priority}</h4>
                             </TableCell>
                             <TableCell>
-                              <h4>{el.createdAt.toFormat("yyyy LLL dd")}</h4>
+                              <h4>
+                                {DateTime.fromJSDate(
+                                  new Date(el.createdAt.toString())
+                                ).toFormat("yyyy LLL dd")}
+                              </h4>
                             </TableCell>
                             <TableCell>
                               <div

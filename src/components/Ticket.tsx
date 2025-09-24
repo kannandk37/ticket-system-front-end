@@ -68,7 +68,7 @@ const TicketDetail = () => {
         await editTicket(ticketData);
       } else {
         if (!question) {
-          console.log("log");
+          console.log("log and throw error");
         } else {
           let ticket = new Ticket();
           ticket.title = question;
@@ -83,9 +83,8 @@ const TicketDetail = () => {
 
   const createTicket = async (ticket: Ticket) => {
     try {
-      console.log("asdasd", ticket);
       await axios.post("http://localhost:3000/api/tickets", ticket);
-      // navigate("/tickets");
+      navigate("/tickets");
     } catch (error) {
       console.log(error);
     }
@@ -94,105 +93,113 @@ const TicketDetail = () => {
   const editTicket = async (ticket: Ticket) => {
     try {
       await axios.put(`http://localhost:3000/api/tickets/${ticket.id}`, ticket);
-      // navigate("/tickets");
+      navigate("/tickets");
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div
-      style={{
-        width: "100%",
-        margin: "20px 5px 15px 5px",
-      }}
-    >
-      <h1> Ticket</h1>
-      <div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "10px",
-            alignItems: "flex-start",
-            paddingLeft: "30px",
-          }}
-        >
-          <div>
-            <h3> Question</h3>
-            <TextField
-              value={question ?? null}
-              id="outlined-basic"
-              variant="outlined"
-              placeholder="Question"
-              style={{
-                width: "800px",
-              }}
-              maxRows={2}
-              disabled={!isAdding}
-              onChange={(e) => setQuestion(e.target.value)}
-            />
-          </div>
-          {!isAdding && (
-            <>
-              <div>
-                <h3> Answer</h3>
-                <TextField
-                  value={answer ?? null}
-                  id="outlined-basic"
-                  variant="outlined"
-                  placeholder="Answer"
-                  style={{
-                    width: "800px",
-                  }}
-                  minRows={4}
-                  maxRows={5}
-                  disabled={!isEditing}
-                  onChange={(e) => setAnswer(e.target.value)}
-                />
-              </div>
-              <div>
-                <h3> Status</h3>
-                <Autocomplete
-                  options={statusData}
-                  value={selectedStatus}
-                  onChange={(e, value: any) => setSelectedStatus(value)}
-                  renderInput={(params) => (
-                    <TextField {...(params as any)} size="medium" />
-                  )}
-                  sx={{ width: 300 }}
-                  disabled={!isEditing}
-                />
-              </div>
-              <div>
-                <h3> Priority</h3>
-                <Autocomplete
-                  options={priorityData}
-                  value={selectedPriority}
-                  onChange={(e, value: any) => setSelectedPriority(value)}
-                  renderInput={(params) => (
-                    <TextField {...(params as any)} size="medium" />
-                  )}
-                  sx={{ width: 300 }}
-                  disabled={!isEditing}
-                />
-              </div>
-            </>
-          )}
-          {(isEditing || isAdding) && (
-            <div style={{ paddingTop: "50px" }}>
-              <Button
+    <>
+      <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+        <Button color="info" onClick={() => navigate("/tickets")}>
+          &#8592; Back
+        </Button>
+        <h2>Tickets</h2>
+      </div>
+      <div
+        style={{
+          width: "100%",
+          margin: "20px 5px 15px 5px",
+        }}
+      >
+        <h1> Ticket</h1>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              alignItems: "flex-start",
+              paddingLeft: "30px",
+            }}
+          >
+            <div>
+              <h3> Question</h3>
+              <TextField
+                value={question ?? null}
+                id="outlined-basic"
                 variant="outlined"
-                sx={{ width: 300, height: 55 }}
-                onClick={() => createOrEditTicket()}
-              >
-                {isEditing ? "Update" : "Submit"}
-              </Button>
+                placeholder="Question"
+                style={{
+                  width: "800px",
+                }}
+                maxRows={2}
+                disabled={!isAdding}
+                onChange={(e) => setQuestion(e.target.value)}
+              />
             </div>
-          )}
+            {!isAdding && (
+              <>
+                <div>
+                  <h3> Answer</h3>
+                  <TextField
+                    value={answer ?? null}
+                    id="outlined-basic"
+                    variant="outlined"
+                    placeholder="Answer"
+                    style={{
+                      width: "800px",
+                    }}
+                    minRows={4}
+                    maxRows={5}
+                    disabled={!isEditing}
+                    onChange={(e) => setAnswer(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <h3> Status</h3>
+                  <Autocomplete
+                    options={statusData}
+                    value={selectedStatus}
+                    onChange={(e, value: any) => setSelectedStatus(value)}
+                    renderInput={(params) => (
+                      <TextField {...(params as any)} size="medium" />
+                    )}
+                    sx={{ width: 300 }}
+                    disabled={!isEditing}
+                  />
+                </div>
+                <div>
+                  <h3> Priority</h3>
+                  <Autocomplete
+                    options={priorityData}
+                    value={selectedPriority}
+                    onChange={(e, value: any) => setSelectedPriority(value)}
+                    renderInput={(params) => (
+                      <TextField {...(params as any)} size="medium" />
+                    )}
+                    sx={{ width: 300 }}
+                    disabled={!isEditing}
+                  />
+                </div>
+              </>
+            )}
+            {(isEditing || isAdding) && (
+              <div style={{ paddingTop: "50px" }}>
+                <Button
+                  variant="outlined"
+                  sx={{ width: 300, height: 55 }}
+                  onClick={() => createOrEditTicket()}
+                >
+                  {isEditing ? "Update" : "Submit"}
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
