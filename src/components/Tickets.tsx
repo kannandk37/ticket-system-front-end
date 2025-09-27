@@ -292,8 +292,8 @@ function Tickets({ pageSize = 10 }) {
                         <>
                           <TableRow>
                             <TableCell>
-                              {/* <h4>{page * rowsPerPage + index + 1}</h4> */}
-                              <h4>{el.id}</h4>
+                              <h4>{page * rowsPerPage + index + 1}</h4>
+                              {/* <h4>{el.id}</h4> */}
                             </TableCell>
                             <TableCell>
                               <h4>{el.title}</h4>
